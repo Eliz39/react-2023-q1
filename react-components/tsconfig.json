@@ -17,8 +17,8 @@
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./src"
+    "baseUrl": "./"
   },
-  "include": ["./src/**/*", "styled.d.ts"],
+  "include": ["vite.config.ts", ".eslintrc.cjs", "./src/**/*", "styled.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
