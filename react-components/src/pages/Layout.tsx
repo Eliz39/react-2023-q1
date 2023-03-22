@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import './Layout.css';
 import BgImage from '../assets/bg.jpg';
+import LocationHoc from '../components/LocationHoc';
 
-export default class Layout extends Component {
+export interface LayoutProps {
+  location: ReturnType<typeof useLocation>;
+}
+
+class Layout extends Component<LayoutProps> {
   render() {
     return (
       <Wrapper>
         <Div_Nav>
-          <p>Current page: {window.location.pathname === '/' ? 'Home' : 'About us'}</p>
+          <p>Current page: {this.props.location.pathname === '/' ? 'Home' : 'About us'}</p>
           <Link to="/">
             <p>Home</p>
           </Link>
@@ -41,3 +46,5 @@ const Div_Nav = styled.div`
     color: #e9cbcb;
   }
 `;
+
+export default LocationHoc(Layout);

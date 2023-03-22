@@ -89,23 +89,3 @@ const SearchButton = styled.button`
     background-color: #1142ad;
   }
 `;
-
-// export default class Profile extends React.Component {
-//   constructor() {
-//     super(props);
-//     this.state = {
-//       message: localStorage.getItem('message') || '',
-//     };
-//   }
-
-//   onChange = (event) => {
-//     const message = event.target.value;
-
-//     localStorage.setItem('message', message);
-//     this.setState({ message });
-//   };
-
-//   render() {
-//     return <input value={this.state.message} onChange={this.onChange} />;
-//   }
-// }
