@@ -16,8 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./"
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["vite.config.ts", ".eslintrc.cjs", "./src/**/*", "styled.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

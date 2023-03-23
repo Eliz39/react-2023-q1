@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import './Layout.css';
 import BgImage from '../assets/bg.jpg';
 import LocationHoc from '../components/LocationHoc';
+import { getCurrentPage } from '../utils/helperFunctions';
 
 export interface LayoutProps {
   location: ReturnType<typeof useLocation>;
@@ -14,12 +15,15 @@ class Layout extends Component<LayoutProps> {
     return (
       <Wrapper>
         <Div_Nav>
-          <p>Current page: {this.props.location.pathname === '/' ? 'Home' : 'About us'}</p>
+          <p>Current page: {getCurrentPage(this.props.location.pathname)}</p>
           <Link to="/">
             <p>Home</p>
           </Link>
           <Link to="/about">
             <p>About us</p>
+          </Link>
+          <Link to="/form">
+            <p>Form</p>
           </Link>
         </Div_Nav>
         <Outlet />
