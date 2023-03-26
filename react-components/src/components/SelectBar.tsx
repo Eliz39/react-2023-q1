@@ -1,31 +1,39 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { ColourOption } from '../colors';
 import ValidationMessage from './ValidationMessage';
 
-type InputProps = React.HTMLAttributes<HTMLInputElement> & {
-  type: string;
+type SelectBarProps = React.HTMLAttributes<HTMLSelectElement> & {
   label: string;
-  referense: React.RefObject<HTMLInputElement>;
+  referense: React.RefObject<HTMLSelectElement>;
+  options: ColourOption[];
   error: boolean;
   message: string;
 };
 
-export default class Input extends Component<InputProps> {
+export default class SelectBar extends Component<SelectBarProps> {
   render() {
     return (
       <div>
-        <Label>
+        <label>
           {this.props.label}
-          <InputField type={this.props.type} ref={this.props.referense} />
-        </Label>
+          <Select ref={this.props.referense}>
+            {this.props.options.map((option) => {
+              return (
+                <option value={option.value} key={option.value}>
+                  {option.label}
+                </option>
+              );
+            })}
+          </Select>
+        </label>
         {this.props.error && <ValidationMessage message={this.props.message} />}
       </div>
     );
   }
 }
 
-const InputField = styled.input`
-  box-sizing: border-box;
+const Select = styled.select`
   display: block;
   width: 300px;
 
@@ -44,7 +52,4 @@ const InputField = styled.input`
   border-radius: 0.25rem;
 
   transition: all 0.25s ease-in-out;
-`;
-const Label = styled.label`
-  /* margin-top: 20px; */
 `;

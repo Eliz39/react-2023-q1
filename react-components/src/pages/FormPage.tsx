@@ -1,219 +1,215 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Input from '../components/Input';
+import Switcher from '../components/Switcher';
+import SelectBar from '../components/SelectBar';
+import Checkbox from '../components/Checkbox';
+import ValidationMessage from '../components/ValidationMessage';
+import ProfileCardsList from '../components/ProfileCardsList';
 import { colourOptions } from '../colors';
 
-export default class FormPage extends Component {
+export type FormPageProps = {
+  submitted: boolean;
+  name: string | undefined;
+  surname: string | undefined;
+  sex: string | undefined;
+  birthDate: string | undefined;
+  color: string | undefined;
+  photo: Blob | MediaSource;
+  consent: boolean | undefined;
+  validForm: boolean | undefined;
+};
+
+export default class FormPage extends Component<FormPageProps> {
+  constructor(props: FormPageProps) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  state: FormPageProps = {
+    submitted: false,
+    name: '',
+    surname: '',
+    sex: '',
+    birthDate: '',
+    color: '',
+    photo: {} as MediaSource,
+    consent: true,
+    validForm: false,
+  };
+  formCards = [] as FormPageProps[];
+  private inputNameRef = React.createRef<HTMLInputElement>();
+  private inputSurnameRef = React.createRef<HTMLInputElement>();
+  private inputMaleRef = React.createRef<HTMLInputElement>();
+  private inputFemaleRef = React.createRef<HTMLInputElement>();
+  private inputBirthdayRef = React.createRef<HTMLInputElement>();
+  private inputColorRef = React.createRef<HTMLSelectElement>();
+  private inputPhotoRef = React.createRef<HTMLInputElement>();
+  private inputConsentRef = React.createRef<HTMLInputElement>();
+
+  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (this.inputPhotoRef.current?.files && this.inputPhotoRef.current?.files[0]) {
+      const formData = {
+        submitted: true,
+        name: this.inputNameRef.current?.value,
+        surname: this.inputSurnameRef.current?.value,
+        sex:
+          (this.inputMaleRef.current?.checked && this.inputMaleRef.current?.value) ||
+          (this.inputFemaleRef.current?.checked && this.inputFemaleRef.current?.value) ||
+          '',
+        birthDate: this.inputBirthdayRef.current?.value,
+        color: this.inputColorRef.current?.value,
+        photo: this.inputPhotoRef.current?.files[0],
+        consent: this.inputConsentRef.current?.checked,
+        validForm:
+          this.inputNameRef.current?.value !== '' ||
+          this.inputSurnameRef.current?.value !== '' ||
+          (this.inputMaleRef.current?.checked && this.inputFemaleRef.current?.checked) ||
+          this.inputBirthdayRef.current?.value !== '' ||
+          this.inputColorRef.current?.value !== '' ||
+          this.inputPhotoRef.current?.value !== '' ||
+          this.inputConsentRef.current?.checked,
+      };
+      this.setState(formData);
+      formData.validForm && this.formCards.push(formData);
+      (document.getElementById('form') as HTMLFormElement).reset();
+    }
+  }
+
+  message = 'This field is required';
+
   render() {
     return (
       <Div>
-        <Form>
-          <label>
-            Name
-            <Input type="text" required />
-          </label>
+        <Form onSubmit={this.handleSubmit} id="form">
+          <Input
+            type="text"
+            label="Name"
+            referense={this.inputNameRef}
+            error={this.state.submitted && this.state.name === ''}
+            message={this.message}
+          />
 
-          <label>
-            Surname
-            <Input type="text" required />
-          </label>
+          <Input
+            type="text"
+            label="Surname"
+            referense={this.inputSurnameRef}
+            error={this.state.submitted && this.state.surname === ''}
+            message={this.message}
+          />
 
-          <SwitcherDiv>
-            <input type="radio" id="radio-one" name="gender" value="male" />
-            <label htmlFor="radio-one">Male</label>
-            <input type="radio" id="radio-two" name="gender" value="female" />
-            <label htmlFor="radio-two">Female</label>
-          </SwitcherDiv>
+          <div>
+            <p>sex</p>
+            <Switcher
+              name="sex"
+              valueFirst="male"
+              valueSecond="female"
+              refFirst={this.inputMaleRef}
+              refSecond={this.inputFemaleRef}
+              error={this.state.submitted && this.state.sex === ''}
+              message={this.message}
+            />
+          </div>
 
-          <label>
-            Birthday
-            <Input type="date" required />
-          </label>
+          <Input
+            type="date"
+            label="Birth date"
+            referense={this.inputBirthdayRef}
+            error={this.state.submitted && this.state.birthDate === ''}
+            message={this.message}
+          />
 
-          <label>
-            Favourite color
-            <Select required>
-              {colourOptions.map((option) => {
-                return (
-                  <option value={option.value} key={option.value}>
-                    {option.label}
-                  </option>
-                );
-              })}
-            </Select>
-          </label>
+          <SelectBar
+            label="Favourite color"
+            referense={this.inputColorRef}
+            options={colourOptions}
+            error={this.state.submitted && this.state.color === ''}
+            message={this.message}
+          />
 
-          <label>
-            <SpanLabel>Upload a profile photo</SpanLabel>
-            <InputFile type="file" name="photo" />
-          </label>
+          <div>
+            <label>
+              <Span>Upload a profile photo</Span>
+              <InputFile type="file" name="photo" ref={this.inputPhotoRef} />
+            </label>
+            {this.state.submitted && !this.state.photo && (
+              <ValidationMessage message={this.message} />
+            )}
+          </div>
 
-          <CheckboxLabel>
-            <Checkbox type="checkbox" defaultChecked required />I consent to my personal data
-          </CheckboxLabel>
+          <Checkbox
+            referense={this.inputConsentRef}
+            label="I consent to my
+            personal data"
+            defaultChecked
+            error={this.state.submitted && this.state.consent === false}
+            message={this.message}
+          />
 
-          <Button type="submit">Submit</Button>
+          <ButtonWrapper>
+            <Button type="submit">Submit</Button>
+          </ButtonWrapper>
         </Form>
+
+        {this.state.submitted && this.formCards.length !== 0 && this.state.validForm && (
+          <ProfileCardsList cards={this.formCards} />
+        )}
       </Div>
     );
   }
 }
 
 const Div = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 120px);
   height: max-content;
   width: calc(100% - 40px);
   color: #fff;
   margin: 30px;
 `;
-const Form = styled.form``;
-const Input = styled.input`
-  box-sizing: border-box;
-  display: block;
-  width: 300px;
-
-  outline: none;
-  padding: 0.375rem 0.75rem;
-  margin-bottom: 15px;
-
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #495057;
-
-  background-color: rgb(246 246 246);
-  background-clip: padding-box;
-
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-
-  transition: all 0.25s ease-in-out;
-`;
-const SwitcherDiv = styled.div`
+const Form = styled.form`
+  margin: 0 auto;
   display: flex;
-  margin-bottom: 15px;
-  overflow: hidden;
-
-  input {
-    position: absolute;
-    height: 1px;
-    width: 1px;
-    border: 0;
-    overflow: hidden;
-
-    &:checked + label {
-      color: #fff;
-      background-color: rgb(25 120 193);
-      box-shadow: none;
-    }
-  }
-
-  label {
-    background-color: rgb(246 246 246);
-    color: #051218;
-    font-size: 14px;
-    line-height: 1;
-    text-align: center;
-    padding: 8px 16px;
-    margin-right: -1px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-    transition: all 0.1s ease-in-out;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #e4e4e4;
-    }
-  }
-
-  label:first-of-type {
-    border-radius: 4px 0 0 4px;
-  }
-
-  label:last-of-type {
-    border-radius: 0 4px 4px 0;
-  }
+  flex-direction: column;
+  gap: 20px;
 `;
-const Select = styled.select`
-  display: block;
-  width: 300px;
 
-  outline: none;
-  padding: 0.375rem 0.75rem;
-  margin-bottom: 15px;
-
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #495057;
-
-  background-color: rgb(246 246 246);
-  background-clip: padding-box;
-
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-
-  transition: all 0.25s ease-in-out;
-`;
-const SpanLabel = styled.span`
+const Span = styled.span`
   margin-right: 15px;
 `;
 const InputFile = styled.input`
   box-sizing: border-box;
-  margin-bottom: 15px;
 
   &::-webkit-file-upload-button {
     visibility: hidden;
   }
 
   &::before {
-    content: 'Select...';
+    content: 'Select from computer';
     display: inline-block;
     background: linear-gradient(top, #f9f9f9, #e3e3e3);
-    border: 1px solid #999;
-    border-radius: 3px;
+    border: 2px solid #999;
+    border-radius: 5px;
+    background: #1d2f5a61;
     padding: 8px 12px;
     outline: none;
     white-space: nowrap;
     user-select: none;
     cursor: pointer;
+    transition: all 0.2s;
   }
-`;
-const Checkbox = styled.input`
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  outline: none;
 
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-
-  border: 1px solid #177fab;
-  border-radius: 6px;
-  background-color: rgb(246 246 246);
-  margin-right: 15px;
-
-  position: relative;
-
-  &:checked {
-    background-color: rgb(25 120 193);
-
-    &::after {
-      content: '✓';
-      display: block;
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      top: calc(50% - 10px);
-      left: 4px;
-      color: #fff;
+  &:hover {
+    &::before {
+      background: rgb(0 27 93 / 38%);
     }
   }
-
-  &:focus {
-    outline: none;
-  }
 `;
-const CheckboxLabel = styled.label`
+const ButtonWrapper = styled.div`
+  width: 300px;
   display: flex;
-  align-items: center;
+  justify-content: center;
 `;
 const Button = styled.button`
   display: inline-block;
@@ -221,7 +217,7 @@ const Button = styled.button`
   white-space: nowrap;
   vertical-align: middle;
   padding: 10px 15px;
-  background: #177fab;
+  background: rgb(0 47 130);
   color: #fff;
   outline: none;
   border-radius: 6px;
@@ -229,10 +225,10 @@ const Button = styled.button`
   border: 1px solid transparent;
   font-size: 16px;
   cursor: pointer;
-  margin: 25px 0;
+  margin-top: 25px;
   transition: all 0.3s;
 
   &:hover {
-    background: #156588;
+    background: rgb(4 38 99);
   }
 `;

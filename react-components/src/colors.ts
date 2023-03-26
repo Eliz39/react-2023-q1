@@ -1,10 +1,11 @@
 export interface ColourOption {
   readonly value: string;
   readonly label: string;
-  readonly color: string;
+  readonly color?: string;
 }
 
-export const colourOptions: readonly ColourOption[] = [
+export const colourOptions: ColourOption[] = [
+  { value: '', label: 'Choose color...' },
   { value: 'ocean', label: 'Ocean', color: '#00B8D9' },
   { value: 'blue', label: 'Blue', color: '#0052CC' },
   { value: 'purple', label: 'Purple', color: '#5243AA' },

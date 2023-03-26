@@ -1,16 +1,16 @@
 import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-import Input from './Input';
+import SearchBar from './SearchBar';
 
 describe('Input', () => {
   it('Renders title', () => {
-    render(<Input />);
+    render(<SearchBar />);
     expect(screen.getByTestId('search-input')).toBeEnabled();
   });
 
   it('Renders button', () => {
-    render(<Input />);
+    render(<SearchBar />);
     expect(screen.getByRole('button')).toHaveTextContent('search');
   });
 });

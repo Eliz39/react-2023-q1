@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Input from '../components/Input';
+import SearchBar from '../components/SearchBar';
 import CardList from '../components/CardList';
 
 export default class Home extends Component {
@@ -8,7 +8,7 @@ export default class Home extends Component {
     return (
       <>
         <H1>Site Search</H1>
-        <Input />
+        <SearchBar />
         <CardList />
       </>
     );
