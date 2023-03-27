@@ -48,32 +48,30 @@ export default class FormPage extends Component<FormPageProps> {
 
   handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (this.inputPhotoRef.current?.files && this.inputPhotoRef.current?.files[0]) {
-      const formData = {
-        submitted: true,
-        name: this.inputNameRef.current?.value,
-        surname: this.inputSurnameRef.current?.value,
-        sex:
-          (this.inputMaleRef.current?.checked && this.inputMaleRef.current?.value) ||
-          (this.inputFemaleRef.current?.checked && this.inputFemaleRef.current?.value) ||
-          '',
-        birthDate: this.inputBirthdayRef.current?.value,
-        color: this.inputColorRef.current?.value,
-        photo: this.inputPhotoRef.current?.files[0],
-        consent: this.inputConsentRef.current?.checked,
-        validForm:
-          this.inputNameRef.current?.value !== '' ||
-          this.inputSurnameRef.current?.value !== '' ||
-          (this.inputMaleRef.current?.checked && this.inputFemaleRef.current?.checked) ||
-          this.inputBirthdayRef.current?.value !== '' ||
-          this.inputColorRef.current?.value !== '' ||
-          this.inputPhotoRef.current?.value !== '' ||
-          this.inputConsentRef.current?.checked,
-      };
-      this.setState(formData);
-      formData.validForm && this.formCards.push(formData);
-      (document.getElementById('form') as HTMLFormElement).reset();
-    }
+    const formData = {
+      submitted: true,
+      name: this.inputNameRef.current?.value,
+      surname: this.inputSurnameRef.current?.value,
+      sex:
+        (this.inputMaleRef.current?.checked && this.inputMaleRef.current?.value) ||
+        (this.inputFemaleRef.current?.checked && this.inputFemaleRef.current?.value) ||
+        '',
+      birthDate: this.inputBirthdayRef.current?.value,
+      color: this.inputColorRef.current?.value,
+      photo: this.inputPhotoRef.current?.files && (this.inputPhotoRef.current?.files[0] as Blob),
+      consent: this.inputConsentRef.current?.checked,
+      validForm:
+        this.inputNameRef.current?.value !== '' &&
+        this.inputSurnameRef.current?.value !== '' &&
+        (this.inputMaleRef.current?.checked || this.inputFemaleRef.current?.checked) &&
+        this.inputBirthdayRef.current?.value !== '' &&
+        this.inputColorRef.current?.value !== '' &&
+        this.inputPhotoRef.current?.value !== '' &&
+        this.inputConsentRef.current?.checked,
+    };
+    this.setState(formData);
+    formData.validForm && this.formCards.push(formData as FormPageProps);
+    (event.target as HTMLFormElement).reset();
   }
 
   message = 'This field is required';
@@ -81,7 +79,7 @@ export default class FormPage extends Component<FormPageProps> {
   render() {
     return (
       <Div>
-        <Form onSubmit={this.handleSubmit} id="form">
+        <Form onSubmit={this.handleSubmit}>
           <Input
             type="text"
             label="Name"
@@ -99,7 +97,7 @@ export default class FormPage extends Component<FormPageProps> {
           />
 
           <div>
-            <p>sex</p>
+            <p>Sex</p>
             <Switcher
               name="sex"
               valueFirst="male"

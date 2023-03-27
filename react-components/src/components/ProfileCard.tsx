@@ -12,7 +12,9 @@ export default class ProfileCard extends Component<ProfileCardProps> {
     return (
       <Div_Card key={this.props.id}>
         <h5>{`${this.props.data.name} ${this.props.data.surname}`}</h5>
-        <Img src={URL.createObjectURL(this.props.data.photo)} alt={this.props.data.name} />
+        {this.props.data.photo && (
+          <Img src={URL.createObjectURL(this.props.data.photo)} alt={this.props.data.name} />
+        )}
         <p>Sex: {this.props.data.sex}</p>
         <p>Birth Date: {this.props.data.birthDate}</p>
         <p>Favourite color: {this.props.data.color}</p>
