@@ -70,8 +70,10 @@ export default class FormPage extends Component<FormPageProps> {
         this.inputConsentRef.current?.checked,
     };
     this.setState(formData);
-    formData.validForm && this.formCards.push(formData as FormPageProps);
-    (event.target as HTMLFormElement).reset();
+    if (formData.validForm) {
+      this.formCards.push(formData as FormPageProps);
+      (event.target as HTMLFormElement).reset();
+    }
   }
 
   message = 'This field is required';
