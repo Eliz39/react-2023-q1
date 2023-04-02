@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import SearchBar from '../components/SearchBar';
-import CardList from '../components/CardList';
+import SearchBar from '../components/SearchBar/SearchBar';
+import CardList from '../components/CardList/CardList';
 
 export default class Home extends Component {
   render() {

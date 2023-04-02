@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { ColourOption } from '../colors';
-import ValidationMessage from './ValidationMessage';
+import { ColourOption } from '../../colors';
+import ValidationMessage from '../ValidationMessage/ValidationMessage';
 
 type SelectBarProps = React.HTMLAttributes<HTMLSelectElement> & {
   label: string;

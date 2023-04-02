@@ -1,31 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import Input from '../components/Input';
-import Switcher from '../components/Switcher';
-import SelectBar from '../components/SelectBar';
-import Checkbox from '../components/Checkbox';
-import ValidationMessage from '../components/ValidationMessage';
-import ProfileCardsList from '../components/ProfileCardsList';
+import Input from '../components/Input/Input';
+import Switcher from '../components/Switcher/Switcher';
+import SelectBar from '../components/SelectBar/SelectBar';
+import Checkbox from '../components/Checkbox/Checkbox';
+import ValidationMessage from '../components/ValidationMessage/ValidationMessage';
+import ProfileCardsList from '../components/CardList/ProfileCardsList';
 import { colourOptions } from '../colors';
 
 export type FormPageProps = {
   submitted: boolean;
-  name: string | undefined;
-  surname: string | undefined;
-  sex: string | undefined;
-  birthDate: string | undefined;
-  color: string | undefined;
-  photo: Blob | MediaSource;
-  consent: boolean | undefined;
-  validForm: boolean | undefined;
+  name: string;
+  surname: string;
+  sex: string;
+  birthDate: string;
+  color: string;
+  photo: MediaSource;
+  consent: boolean;
+  validForm: boolean;
 };
 
-export default class FormPage extends Component<FormPageProps> {
-  constructor(props: FormPageProps) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  state: FormPageProps = {
+const FormPage = () => {
+  const [state, setState] = useState({
     submitted: false,
     name: '',
     surname: '',
@@ -35,129 +31,131 @@ export default class FormPage extends Component<FormPageProps> {
     photo: {} as MediaSource,
     consent: true,
     validForm: false,
-  };
-  formCards = [] as FormPageProps[];
-  private inputNameRef = React.createRef<HTMLInputElement>();
-  private inputSurnameRef = React.createRef<HTMLInputElement>();
-  private inputMaleRef = React.createRef<HTMLInputElement>();
-  private inputFemaleRef = React.createRef<HTMLInputElement>();
-  private inputBirthdayRef = React.createRef<HTMLInputElement>();
-  private inputColorRef = React.createRef<HTMLSelectElement>();
-  private inputPhotoRef = React.createRef<HTMLInputElement>();
-  private inputConsentRef = React.createRef<HTMLInputElement>();
+  });
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const formCards = [] as FormPageProps[];
+  const inputSurnameRef = React.createRef<HTMLInputElement>();
+  const inputMaleRef = React.createRef<HTMLInputElement>();
+  const inputNameRef = React.createRef<HTMLInputElement>();
+  const inputFemaleRef = React.createRef<HTMLInputElement>();
+  const inputBirthdayRef = React.createRef<HTMLInputElement>();
+  const inputColorRef = React.createRef<HTMLSelectElement>();
+  const inputPhotoRef = React.createRef<HTMLInputElement>();
+  const inputConsentRef = React.createRef<HTMLInputElement>();
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = {
       submitted: true,
-      name: this.inputNameRef.current?.value,
-      surname: this.inputSurnameRef.current?.value,
+      name: inputNameRef.current?.value as string,
+      surname: inputSurnameRef.current?.value as string,
       sex:
-        (this.inputMaleRef.current?.checked && this.inputMaleRef.current?.value) ||
-        (this.inputFemaleRef.current?.checked && this.inputFemaleRef.current?.value) ||
+        (inputMaleRef.current?.checked && inputMaleRef.current?.value) ||
+        (inputFemaleRef.current?.checked && inputFemaleRef.current?.value) ||
         '',
-      birthDate: this.inputBirthdayRef.current?.value,
-      color: this.inputColorRef.current?.value,
-      photo: this.inputPhotoRef.current?.files && (this.inputPhotoRef.current?.files[0] as Blob),
-      consent: this.inputConsentRef.current?.checked,
+      birthDate: inputBirthdayRef.current?.value as string,
+      color: inputColorRef.current?.value as string,
+      photo:
+        inputPhotoRef.current?.files && (inputPhotoRef.current?.files[0] as Blob | MediaSource),
+      consent: inputConsentRef.current?.checked as boolean,
       validForm:
-        this.inputNameRef.current?.value !== '' &&
-        this.inputSurnameRef.current?.value !== '' &&
-        (this.inputMaleRef.current?.checked || this.inputFemaleRef.current?.checked) &&
-        this.inputBirthdayRef.current?.value !== '' &&
-        this.inputColorRef.current?.value !== '' &&
-        this.inputPhotoRef.current?.value !== '' &&
-        this.inputConsentRef.current?.checked,
+        inputNameRef.current?.value !== '' &&
+        inputSurnameRef.current?.value !== '' &&
+        (inputMaleRef.current?.checked || inputFemaleRef.current?.checked) &&
+        inputBirthdayRef.current?.value !== '' &&
+        inputColorRef.current?.value !== '' &&
+        inputPhotoRef.current?.value !== '' &&
+        inputConsentRef.current?.checked,
     };
-    this.setState(formData);
+    setState(formData as FormPageProps);
     if (formData.validForm) {
-      this.formCards.push(formData as FormPageProps);
+      //   console.log(formData);
+      formCards.push(formData as FormPageProps);
       (event.target as HTMLFormElement).reset();
     }
-  }
+  };
 
-  message = 'This field is required';
+  const message = 'This field is required';
 
-  render() {
-    return (
-      <Div>
-        <Form onSubmit={this.handleSubmit}>
-          <Input
-            type="text"
-            label="Name"
-            referense={this.inputNameRef}
-            error={this.state.submitted && this.state.name === ''}
-            message={this.message}
+  return (
+    <Div>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          label="Name"
+          referense={inputNameRef}
+          error={state.submitted && state.name === ''}
+          message={message}
+        />
+
+        <Input
+          type="text"
+          label="Surname"
+          referense={inputSurnameRef}
+          error={state.submitted && state.surname === ''}
+          message={message}
+        />
+
+        <div>
+          <p>Sex</p>
+          <Switcher
+            name="sex"
+            valueFirst="male"
+            valueSecond="female"
+            refFirst={inputMaleRef}
+            refSecond={inputFemaleRef}
+            error={state.submitted && state.sex === ''}
+            message={message}
           />
+        </div>
 
-          <Input
-            type="text"
-            label="Surname"
-            referense={this.inputSurnameRef}
-            error={this.state.submitted && this.state.surname === ''}
-            message={this.message}
-          />
+        <Input
+          type="date"
+          label="Birth date"
+          referense={inputBirthdayRef}
+          error={state.submitted && state.birthDate === ''}
+          message={message}
+        />
 
-          <div>
-            <p>Sex</p>
-            <Switcher
-              name="sex"
-              valueFirst="male"
-              valueSecond="female"
-              refFirst={this.inputMaleRef}
-              refSecond={this.inputFemaleRef}
-              error={this.state.submitted && this.state.sex === ''}
-              message={this.message}
-            />
-          </div>
+        <SelectBar
+          label="Favourite color"
+          referense={inputColorRef}
+          options={colourOptions}
+          error={state.submitted && state.color === ''}
+          message={message}
+        />
 
-          <Input
-            type="date"
-            label="Birth date"
-            referense={this.inputBirthdayRef}
-            error={this.state.submitted && this.state.birthDate === ''}
-            message={this.message}
-          />
+        <div>
+          <label>
+            <Span>Upload a profile photo</Span>
+            <InputFile type="file" name="photo" ref={inputPhotoRef} />
+          </label>
+          {state.submitted && !state.photo && <ValidationMessage message={message} />}
+        </div>
 
-          <SelectBar
-            label="Favourite color"
-            referense={this.inputColorRef}
-            options={colourOptions}
-            error={this.state.submitted && this.state.color === ''}
-            message={this.message}
-          />
-
-          <div>
-            <label>
-              <Span>Upload a profile photo</Span>
-              <InputFile type="file" name="photo" ref={this.inputPhotoRef} />
-            </label>
-            {this.state.submitted && !this.state.photo && (
-              <ValidationMessage message={this.message} />
-            )}
-          </div>
-
-          <Checkbox
-            referense={this.inputConsentRef}
-            label="I consent to my
+        <Checkbox
+          referense={inputConsentRef}
+          label="I consent to my
             personal data"
-            defaultChecked
-            error={this.state.submitted && this.state.consent === false}
-            message={this.message}
-          />
+          defaultChecked
+          error={state.submitted && state.consent === false}
+          message={message}
+        />
 
-          <ButtonWrapper>
-            <Button type="submit">Submit</Button>
-          </ButtonWrapper>
-        </Form>
+        <ButtonWrapper>
+          <Button type="submit">Submit</Button>
+        </ButtonWrapper>
+      </Form>
 
-        {this.state.submitted && this.formCards.length !== 0 && this.state.validForm && (
-          <ProfileCardsList cards={this.formCards} />
-        )}
-      </Div>
-    );
-  }
-}
+      {formCards.length !== 0 && (
+        <>
+          {console.log(formCards)}
+          <ProfileCardsList cards={formCards} />
+        </>
+      )}
+    </Div>
+  );
+};
 
 const Div = styled.div`
   display: flex;
@@ -232,3 +230,5 @@ const Button = styled.button`
     background: rgb(4 38 99);
   }
 `;
+
+export default FormPage;

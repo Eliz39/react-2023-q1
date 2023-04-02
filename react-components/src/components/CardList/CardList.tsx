@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Card from './Card';
-import { cardsData } from '../cards';
+import Card from '../Card/Card';
+import { cardsData } from '../../cards';
 
 export default class CardList extends Component {
   render() {

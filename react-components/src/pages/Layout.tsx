@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import './Layout.css';
 import BgImage from '../assets/bg.jpg';
-import LocationHoc from '../components/LocationHoc';
+import LocationHoc from '../components/LocationHoc/LocationHoc';
 import { getCurrentPage } from '../utils/helperFunctions';
 
 export interface LayoutProps {

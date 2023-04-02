@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-import { cardsData } from '../cards';
+import { cardsData } from '../../cards';
 import Card from './Card';
 
 describe('Card', () => {

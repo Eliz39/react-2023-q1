@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import ValidationMessage from './ValidationMessage';
+import ValidationMessage from '../ValidationMessage/ValidationMessage';
 
 type SwitcherProps = React.HTMLAttributes<HTMLInputElement> & {
   name: string;

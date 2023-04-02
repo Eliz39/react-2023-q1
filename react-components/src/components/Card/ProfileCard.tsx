@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { FormPageProps } from '../pages/FormPage';
+import { FormPageProps } from '../../pages/FormPage';
 
 type ProfileCardProps = {
   id: number;
