@@ -11,7 +11,6 @@ const ProfileCardsList = (props: ProfileCardsListProps) => {
   return (
     <Div_CardsContainer>
       <>
-        {console.log(props.cards)}
         {props.cards.map((data, i: number) => {
           return <ProfileCard key={i} id={i} data={data} />;
         })}

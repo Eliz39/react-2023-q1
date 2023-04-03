@@ -33,7 +33,7 @@ const FormPage = () => {
     validForm: false,
   });
 
-  const formCards = [] as FormPageProps[];
+  const [formCards, setFormCards] = useState([] as FormPageProps[]);
   const inputSurnameRef = React.createRef<HTMLInputElement>();
   const inputMaleRef = React.createRef<HTMLInputElement>();
   const inputNameRef = React.createRef<HTMLInputElement>();
@@ -69,8 +69,7 @@ const FormPage = () => {
     };
     setState(formData as FormPageProps);
     if (formData.validForm) {
-      //   console.log(formData);
-      formCards.push(formData as FormPageProps);
+      setFormCards((prevState) => [...prevState, formData as FormPageProps]);
       (event.target as HTMLFormElement).reset();
     }
   };
@@ -147,12 +146,7 @@ const FormPage = () => {
         </ButtonWrapper>
       </Form>
 
-      {formCards.length !== 0 && (
-        <>
-          {console.log(formCards)}
-          <ProfileCardsList cards={formCards} />
-        </>
-      )}
+      {formCards.length !== 0 && <ProfileCardsList cards={formCards} />}
     </Div>
   );
 };
