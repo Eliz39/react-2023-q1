@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { ACCESS_KEY } from '../../utils/ACCESS_KEY';
 
-const SearchBar = () => {
+type SearchBarProps = {
+  searchFn: (value: string) => void;
+};
+
+const SearchBar = (props: SearchBarProps) => {
   const [inputSavedValue, setInputSavedValue] = useState(
     localStorage.getItem('search-value') || ''
   );
@@ -21,14 +24,6 @@ const SearchBar = () => {
     };
   }, []);
 
-  const searchForImage = () => {
-    fetch(`https://api.unsplash.com/photos/?client_id=${ACCESS_KEY}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => console.log(data));
-  };
-
   return (
     <Div_InputWrapper>
       <InputField
@@ -38,7 +33,7 @@ const SearchBar = () => {
         onChange={(e) => setInputSavedValue(e.target.value)}
         data-testid="search-input"
       />
-      <SearchButton className="search-btn" onClick={() => searchForImage()}>
+      <SearchButton className="search-btn" onClick={() => props.searchFn(inputSavedValue)}>
         search
       </SearchButton>
     </Div_InputWrapper>
