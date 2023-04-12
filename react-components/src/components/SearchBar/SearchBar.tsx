@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
-const SearchBar = () => {
+type SearchBarProps = {
+  searchFn: (value: string) => void;
+};
+
+const SearchBar = (props: SearchBarProps) => {
   const [inputSavedValue, setInputSavedValue] = useState(
     localStorage.getItem('search-value') || ''
   );
@@ -29,7 +33,9 @@ const SearchBar = () => {
         onChange={(e) => setInputSavedValue(e.target.value)}
         data-testid="search-input"
       />
-      <SearchButton className="search-btn">search</SearchButton>
+      <SearchButton className="search-btn" onClick={() => props.searchFn(inputSavedValue)}>
+        search
+      </SearchButton>
     </Div_InputWrapper>
   );
 };
